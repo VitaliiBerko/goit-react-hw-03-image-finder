@@ -2,6 +2,7 @@ import { Fragment } from 'react';
 import { Component } from 'react';
 import { Modal } from './Modal/Modal';
 import axios from 'axios';
+import { Searchbar } from './Searchbar/Searchbar';
 
 export class App extends Component {
   state = {
@@ -31,11 +32,13 @@ export class App extends Component {
     const { showModal } = this.state;
     return (
       <Fragment>
-        {/* <Searchbar />
-        <ImageGallery />
+        
+         <Searchbar onSubmit={this}/>
+        
+       {/* // <ImageGallery />
 
-        <Loader />
-        <Button /> */}
+        // <Loader />
+        // <Button /> */}
 
         {/* <button type="button" onClick={this.toggleModal}>Open</button>
         {showModal && <Modal onClose={this.toggleModal}/>} */}
