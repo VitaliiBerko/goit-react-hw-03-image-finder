@@ -6,6 +6,9 @@ import s from '../styles.module.css';
 const modalRoot = document.querySelector('#modal-root');
 
 export class Modal extends Component {
+  static propTypes = {
+        onClose: PropTypes.func.isRequired
+    }
   state = {};
 
   componentDidMount() {

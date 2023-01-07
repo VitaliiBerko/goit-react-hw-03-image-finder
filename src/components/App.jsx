@@ -1,47 +1,35 @@
 import { Fragment } from 'react';
 import { Component } from 'react';
 import { Modal } from './Modal/Modal';
-import axios from 'axios';
 import { Searchbar } from './Searchbar/Searchbar';
+import { ImageGallery } from './ImageGallery/ImageGallery';
 
 export class App extends Component {
   state = {
+    searchQuery: '',
     showModal: false,
-    images: null,
   };
 
-  async componentDidMount() {
-    try {
-      const {
-        data: { hits },
-      } = await axios.get(
-        'https://pixabay.com/api/?q=cat&page=1&key=31315876-ebaad9cfb6f2dd991d80baf37&image_type=photo&orientation=horizontal&per_page=12'
-      );
-
-      return hits;
-    } catch (error) {
-      console.log(error);
-    }
-  }
+  handleFormSubmit = searchQuery => {
+    this.setState({ searchQuery });
+    // console.log(searchQuery);
+  };
 
   toggleModal = () => {
     this.setState(({ showModal }) => ({ showModal: !showModal }));
   };
 
   render() {
-    const { showModal } = this.state;
+    const { showModal, images, searchQuery } = this.state;
+    
     return (
       <Fragment>
-        
-         <Searchbar onSubmit={this}/>
-        
-       {/* // <ImageGallery />
+        <Searchbar onSubmit={this.handleFormSubmit} />
 
-        // <Loader />
-        // <Button /> */}
-
-        {/* <button type="button" onClick={this.toggleModal}>Open</button>
-        {showModal && <Modal onClose={this.toggleModal}/>} */}
+        {searchQuery && <ImageGallery searchQuery={searchQuery} />}
+        {/* // <Button /> */
+        /* <button type="button" onClick={this.toggleModal}>Open</button>
+    {showModal && <Modal onClose={this.toggleModal}/>}  */}
       </Fragment>
     );
   }

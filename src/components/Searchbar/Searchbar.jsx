@@ -1,53 +1,58 @@
-import { Component } from "react"
+import { Component } from 'react';
+import Notiflix from 'notiflix';
 import PropTypes from 'prop-types';
-import s from "../styles.module.css"
+import s from '../styles.module.css';
 
+export class Searchbar extends Component {
+  static propTypes = {
+    onSubmit: PropTypes.func.isRequired,
+  };
 
-export class Searchbar extends Component  {
-    static propTypes = {
-        onSubmit: PropTypes.func.isRequired
-    }
+  state = {
+    searchQuery: '',
+  };
+  
+  handleChange = e => {
+    const { value } = e.currentTarget;
+    this.setState({ searchQuery: value.trim() });
+  };
 
-    state = {
-        search: "",
-    }
-    handlerChange = e => {
-        const { value } = e.currentTarget;
-        this.setState({search: value})
-}
-
-    handlerOnSubmit = e => {
+    handleOnSubmit = e => {
         e.preventDefault();
-        this.props.onSubmit(this.state)
-        this.resetForm();
-    }
+        const { searchQuery } = this.state
+        if (searchQuery.trim() === "") {
+            Notiflix.Notify.info("Введіть ваш запит")
+            return
+        }
+    
+    this.props.onSubmit(searchQuery);
+    this.resetForm();
+  };
 
+  resetForm = () => {
+    this.setState({ searchQuery: '' });
+  };
 
+  render() {
+    const { searchQuery } = this.state;
+    return (
+      <header className={s.searchbar}>
+        <form onSubmit={this.handleOnSubmit} className={s.form}>
+          <button type="submit" className={s.button}>
+            <span className={s.button__label}>Search</span>
+          </button>
 
-    resetForm = () => {
-        this.setState({ search: ""})
-    }
-
-    render() {
-        const { search } = this.state;
-        return (
-            <header className={s.searchbar}>
-                <form onSubmit={this.handlerOnSubmit} className={s.form}>
-                    <button type="submit" className={s.button}>
-                        <span className={s.button__label}>Search</span>
-                    </button>
-
-                    <input
-                        onChange={this.handlerChange}
-                        value={search}
-                        className={s.input}
-                        type="text"
-                        autoComplete="off"
-                        autoFocus
-                        placeholder="Search images and photos"
-                    />
-                </form>
-            </header>
-        )
-    }
+          <input
+            onChange={this.handleChange}
+            value={searchQuery}
+            className={s.input}
+            type="text"
+            autoComplete="off"
+            autoFocus
+            placeholder="Search images and photos"
+          />
+        </form>
+      </header>
+    );
+  }
 }
