@@ -6,6 +6,7 @@ import Loader from 'components/Loader/Loader';
 import PropTypes from 'prop-types';
 import s from '../styles.module.css';
 import { fetchApiImages } from '../services/images-api.services';
+import { Button } from 'components/Button/Button';
 
 // ImageGallery.propTypes = {
 //   images: PropTypes.arrayOf(
@@ -25,54 +26,71 @@ export class ImageGallery extends Component {
   };
 
   state = {
-    images: null,
-    // loading: false,
-    status: 'idle',
+    images: [],
+    loading: false,
+    searchQuery: '',
+    page: 1,
   };
-  componentDidMount(prevProps) {
-    // fetchApiImages(.searchQuery);
-  }
 
-  async componentDidUpdate(prevProps, prevState) {
-    if (prevProps.searchQuery !== this.props.searchQuery) {
-      try {
-        this.setState({ status: 'pending' });
-        const response = await fetchApiImages(this.props.searchQuery);
-        console.log(response);
-        if (response.total !== 0) {
-          this.setState({ images: response.hits, status: 'resolved'});
-        } else {
-          this.setState({ status: 'rejected'})
+ 
+  componentDidUpdate(prevProps, prevState) {
+    const prevSearch = prevProps.searchQuery;
+    const nextSearch = this.props.searchQuery;
+    const prevPage = prevState.page;
+    const nextPage = this.state.page;
+
+    if (prevSearch !== nextSearch) {
+      this.setState({ searchQuery: nextSearch, images: []});
+    }
+
+    if (prevSearch !== nextSearch || prevPage !== nextPage) {
+      this.setState({ loading: true });
+      fetchApiImages(nextSearch, nextPage).then(({ hits, totalHits }) => {
+        if (hits.length === 0) {
+          Notiflix.Notify.failure(
+            `Sorry, there are no images ${nextSearch} matching your search query. Please try again.`
+          );
+          this.setState({ loading: false });
+          return;
         }
-      } catch (error) {
-        this.setState({ error, status: 'rejected' });
-      } finally {
-        this.setState({ loading: false });
-      }
+
+        if (hits.length === 0 && totalHits !== 0) {
+          Notiflix.Notify.info(
+            "We're sorry, but you've reached the end of search results."
+          );
+          this.setState({ loading: false });
+          return;
+        }
+
+        this.setState(({ images }) => ({
+          images: [...images, ...hits],
+          loading: false,
+        }));
+      });
     }
   }
+
+  loadMore = () => {
+    this.setState(prevState => ({ page: prevState.page + 1 }));
+  };
 
   render() {
-    const { images, status } = this.state;
+    const { images, status, loading } = this.state;
 
-    if (status === 'pending') {
-      return Loader;
-    }
+    return (
+      <Fragment>
+        {loading && Loader}
 
-    if (status === 'rejected') {
-      Notiflix.Notify.failure(
-        `Sorry, there are no images ${this.props.searchQuery}  matching your search query. Please try again.`
-      );
-    }
-
-    if (status === 'resolved') {
-      return (
         <ul className={s.gallery}>
           {images.map(({ id, webformatURL, tags }) => (
-            <ImageGalleryItem key={id} id={id} src={webformatURL} alt={tags} />
+            <ImageGalleryItem onClick={this.props.onImageClick} key={id} id={id} src={webformatURL} alt={tags} />
           ))}
         </ul>
-      );
-    }
+
+        {images.length > 0 && <Button onClick={this.loadMore}></Button>}
+      </Fragment>
+    );
+
+    
   }
 }

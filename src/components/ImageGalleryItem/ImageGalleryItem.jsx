@@ -1,9 +1,9 @@
 import PropTypes from "prop-types"
 import s from '../styles.module.css'
 
-export const ImageGalleryItem = ({id, src, alt}) => {
+export const ImageGalleryItem = ({id, src, alt, onClick}) => {
   return (
-      <li  className={s.gallery__item}>
+      <li  onClick={onClick} className={s.gallery__item}>
       <img src={src} alt={alt} />
     </li>
   );

@@ -1,13 +1,14 @@
 import { Fragment } from 'react';
 import { Component } from 'react';
-import { Modal } from './Modal/Modal';
 import { Searchbar } from './Searchbar/Searchbar';
 import { ImageGallery } from './ImageGallery/ImageGallery';
-
+import { Modal } from './Modal/Modal';
 export class App extends Component {
   state = {
     searchQuery: '',
     showModal: false,
+    alt: '',
+    src: ''
   };
 
   handleFormSubmit = searchQuery => {
@@ -15,21 +16,30 @@ export class App extends Component {
     // console.log(searchQuery);
   };
 
+  handleImageClick=(e)=>{
+    this.setState({
+      showModal: true,
+      alt: e.target.alt,
+      src: e.target.src,
+    })   
+  }
+
   toggleModal = () => {
     this.setState(({ showModal }) => ({ showModal: !showModal }));
   };
 
   render() {
-    const { showModal, images, searchQuery } = this.state;
+    const { showModal, searchQuery, alt, src } = this.state;
     
     return (
       <Fragment>
         <Searchbar onSubmit={this.handleFormSubmit} />
 
-        {searchQuery && <ImageGallery searchQuery={searchQuery} />}
+        {searchQuery && <ImageGallery searchQuery={searchQuery} onImageClick={this.handleImageClick} />}
         {/* // <Button /> */
         /* <button type="button" onClick={this.toggleModal}>Open</button>
     {showModal && <Modal onClose={this.toggleModal}/>}  */}
+      {showModal && <Modal src={src} alt={alt} onClose={this.toggleModal}/>}
       </Fragment>
     );
   }

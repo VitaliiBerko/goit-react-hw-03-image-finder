@@ -7,8 +7,10 @@ const modalRoot = document.querySelector('#modal-root');
 
 export class Modal extends Component {
   static propTypes = {
-        onClose: PropTypes.func.isRequired
-    }
+    src: PropTypes.string.isRequired,
+    alt: PropTypes.string.isRequired,
+    onClose: PropTypes.func.isRequired,
+  };
   state = {};
 
   componentDidMount() {
@@ -20,12 +22,12 @@ export class Modal extends Component {
   }
 
   handleKeyDown = e => {
-    const {onClose} = this.props
-    console.log(onClose());
+    const { onClose } = this.props;
+    // console.log(onClose());
 
     if (e.code === 'Escape') {
-      console.log(e.code, 'нажав');
-      onClose();
+      // console.log(e.code, 'нажав');
+      this.props.onClose();
     }
   };
 
@@ -36,10 +38,12 @@ export class Modal extends Component {
   };
 
   render() {
+
+    const{src, alt} = this.props
     return createPortal(
       <div className={s.Overlay} onClick={this.handleOverlayClick}>
         <div className={s.Modal}>
-          <img src="" alt="" />
+          <img src={src} alt={alt} />
           <p>Modal window</p>
         </div>
       </div>,
