@@ -1,9 +1,9 @@
-import PropTypes from "prop-types"
-import s from '../styles.module.css'
+import PropTypes from 'prop-types';
+import s from '../styles.module.css';
 
-export const ImageGalleryItem = ({id, src, alt, onClick}) => {
+export const ImageGalleryItem = ({ id, src, alt, onClick }) => {
   return (
-      <li  onClick={onClick} className={s.gallery__item}>
+    <li key={id} onClick={onClick} className={s.gallery__item}>
       <img src={src} alt={alt} />
     </li>
   );
@@ -12,5 +12,5 @@ export const ImageGalleryItem = ({id, src, alt, onClick}) => {
 ImageGalleryItem.propTypes = {
   id: PropTypes.number.isRequired,
   src: PropTypes.string.isRequired,
-  alt: PropTypes.string.isRequired
-}
+  alt: PropTypes.string.isRequired,
+};

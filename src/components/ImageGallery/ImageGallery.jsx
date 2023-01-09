@@ -1,5 +1,4 @@
 import { Component, Fragment } from 'react';
-import axios from 'axios';
 import Notiflix from 'notiflix';
 import { ImageGalleryItem } from 'components/ImageGalleryItem/ImageGalleryItem';
 import Loader from 'components/Loader/Loader';
@@ -7,18 +6,6 @@ import PropTypes from 'prop-types';
 import s from '../styles.module.css';
 import { fetchApiImages } from '../services/images-api.services';
 import { Button } from 'components/Button/Button';
-
-// ImageGallery.propTypes = {
-//   images: PropTypes.arrayOf(
-//     PropTypes.shape(
-//       {
-//         id: PropTypes.number.isRequired,
-//         webformatURL: PropTypes.string.isRequired,
-//         tags: PropTypes.string.isRequired
-//       }
-//     )
-//   ).isRequired
-// }
 
 export class ImageGallery extends Component {
   static propTypes = {
@@ -32,7 +19,6 @@ export class ImageGallery extends Component {
     page: 1,
   };
 
- 
   componentDidUpdate(prevProps, prevState) {
     const prevSearch = prevProps.searchQuery;
     const nextSearch = this.props.searchQuery;
@@ -40,7 +26,7 @@ export class ImageGallery extends Component {
     const nextPage = this.state.page;
 
     if (prevSearch !== nextSearch) {
-      this.setState({ searchQuery: nextSearch, images: []});
+      this.setState({ searchQuery: nextSearch, images: [] });
     }
 
     if (prevSearch !== nextSearch || prevPage !== nextPage) {
@@ -75,7 +61,7 @@ export class ImageGallery extends Component {
   };
 
   render() {
-    const { images, status, loading } = this.state;
+    const { images, loading } = this.state;
 
     return (
       <Fragment>
@@ -83,14 +69,30 @@ export class ImageGallery extends Component {
 
         <ul className={s.gallery}>
           {images.map(({ id, webformatURL, tags }) => (
-            <ImageGalleryItem onClick={this.props.onImageClick} key={id} id={id} src={webformatURL} alt={tags} />
+            <ImageGalleryItem
+              onClick={this.props.onImageClick}
+              key={id}
+              id={id}
+              src={webformatURL}
+              alt={tags}
+            />
           ))}
         </ul>
 
         {images.length > 0 && <Button onClick={this.loadMore}></Button>}
       </Fragment>
     );
-
-    
   }
 }
+
+// ImageGallery.propTypes = {
+//   images: PropTypes.arrayOf(
+//     PropTypes.shape(
+//       {
+//         id: PropTypes.number.isRequired,
+//         webformatURL: PropTypes.string.isRequired,
+//         tags: PropTypes.string.isRequired
+//       }
+//     )
+//   ).isRequired
+// }

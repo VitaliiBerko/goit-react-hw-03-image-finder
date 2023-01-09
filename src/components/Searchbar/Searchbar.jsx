@@ -11,27 +11,27 @@ export class Searchbar extends Component {
   state = {
     searchQuery: '',
   };
-  
+
   handleChange = e => {
     const { value } = e.currentTarget;
     this.setState({ searchQuery: value.trim() });
   };
 
-    handleOnSubmit = e => {
-        e.preventDefault();
-        const { searchQuery } = this.state
-        if (searchQuery.trim() === "") {
-            Notiflix.Notify.info("Введіть ваш запит")
-            return
-        }
-    
+  handleOnSubmit = e => {
+    e.preventDefault();
+    const { searchQuery } = this.state;
+    if (searchQuery.trim() === '') {
+      Notiflix.Notify.info('Введіть ваш запит');
+      return;
+    }
+
     this.props.onSubmit(searchQuery);
-    this.resetForm();
+    this.setState({searchQuery: ''});
   };
 
-  resetForm = () => {
-    this.setState({ searchQuery: '' });
-  };
+  // resetForm = () => {
+  //   this.setState({ searchQuery: '' });
+  // };
 
   render() {
     const { searchQuery } = this.state;

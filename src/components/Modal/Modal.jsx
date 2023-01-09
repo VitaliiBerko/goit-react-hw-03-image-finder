@@ -11,7 +11,6 @@ export class Modal extends Component {
     alt: PropTypes.string.isRequired,
     onClose: PropTypes.func.isRequired,
   };
-  state = {};
 
   componentDidMount() {
     window.addEventListener('keydown', this.handleKeyDown);
@@ -22,11 +21,7 @@ export class Modal extends Component {
   }
 
   handleKeyDown = e => {
-    const { onClose } = this.props;
-    // console.log(onClose());
-
     if (e.code === 'Escape') {
-      // console.log(e.code, 'нажав');
       this.props.onClose();
     }
   };
@@ -38,13 +33,11 @@ export class Modal extends Component {
   };
 
   render() {
-
-    const{src, alt} = this.props
+    const { src, alt } = this.props;
     return createPortal(
       <div className={s.Overlay} onClick={this.handleOverlayClick}>
         <div className={s.Modal}>
           <img src={src} alt={alt} />
-          <p>Modal window</p>
         </div>
       </div>,
       modalRoot
