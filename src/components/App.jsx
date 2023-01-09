@@ -8,7 +8,7 @@ export class App extends Component {
     searchQuery: '',
     showModal: false,
     alt: '',
-    src: ''
+    src: '',
   };
 
   handleFormSubmit = searchQuery => {
@@ -16,13 +16,13 @@ export class App extends Component {
     // console.log(searchQuery);
   };
 
-  handleImageClick=(e)=>{
+  handleImageClick = e => {
     this.setState({
       showModal: true,
       alt: e.target.alt,
       src: e.target.src,
-    })   
-  }
+    });
+  };
 
   toggleModal = () => {
     this.setState(({ showModal }) => ({ showModal: !showModal }));
@@ -30,16 +30,19 @@ export class App extends Component {
 
   render() {
     const { showModal, searchQuery, alt, src } = this.state;
-    
+
     return (
       <Fragment>
         <Searchbar onSubmit={this.handleFormSubmit} />
 
-        {searchQuery && <ImageGallery searchQuery={searchQuery} onImageClick={this.handleImageClick} />}
-        {/* // <Button /> */
-        /* <button type="button" onClick={this.toggleModal}>Open</button>
-    {showModal && <Modal onClose={this.toggleModal}/>}  */}
-      {showModal && <Modal src={src} alt={alt} onClose={this.toggleModal}/>}
+        {searchQuery && (
+          <ImageGallery
+            searchQuery={searchQuery}
+            onImageClick={this.handleImageClick}
+          />
+        )}
+
+        {showModal && <Modal src={src} alt={alt} onClose={this.toggleModal} />}
       </Fragment>
     );
   }
