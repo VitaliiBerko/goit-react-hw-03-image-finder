@@ -29,10 +29,7 @@ export class Searchbar extends Component {
     this.setState({searchQuery: ''});
   };
 
-  // resetForm = () => {
-  //   this.setState({ searchQuery: '' });
-  // };
-
+  
   render() {
     const { searchQuery } = this.state;
     return (

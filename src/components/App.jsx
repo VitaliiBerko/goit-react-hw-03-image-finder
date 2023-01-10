@@ -34,13 +34,11 @@ export class App extends Component {
     return (
       <Fragment>
         <Searchbar onSubmit={this.handleFormSubmit} />
-
-        {searchQuery && (
+        
           <ImageGallery
             searchQuery={searchQuery}
             onImageClick={this.handleImageClick}
-          />
-        )}
+         />       
 
         {showModal && <Modal src={src} alt={alt} onClose={this.toggleModal} />}
       </Fragment>

@@ -1,4 +1,5 @@
 import axios from 'axios';
+
 export async function fetchApiImages(searchQuery, page) {
   try {
     const response = await axios.get(
