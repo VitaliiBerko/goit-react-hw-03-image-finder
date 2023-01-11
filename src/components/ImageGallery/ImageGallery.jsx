@@ -29,7 +29,10 @@ export class ImageGallery extends Component {
       this.setState({ searchQuery: nextSearch, images: [], page: 1 });
     }
 
-    if (prevSearch !== nextSearch || prevPage !== nextPage) {
+    if (
+      (prevSearch !== nextSearch && nextPage === 1) ||
+      prevPage !== nextPage
+    ) {
       this.setState({ loading: true });
 
       fetchApiImages(nextSearch, nextPage).then(({ hits, totalHits }) => {
@@ -49,14 +52,17 @@ export class ImageGallery extends Component {
           return;
         }
 
-        const [data] = hits;
-
-        const { id, webformatURL, largeImageURL } = data;
-
-        console.log(id, webformatURL, largeImageURL);
+        const newImage = hits.map(
+          ({ id, webformatURL, largeImageURL, tags }) => ({
+            id,
+            webformatURL,
+            largeImageURL,
+            tags,
+          })
+        );
 
         this.setState(({ images }) => ({
-          images: [...images, ...hits],
+          images: [...images, ...newImage],
           loading: false,
         }));
       });
