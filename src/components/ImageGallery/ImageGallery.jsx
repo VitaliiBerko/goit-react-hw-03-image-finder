@@ -4,7 +4,7 @@ import { ImageGalleryItem } from 'components/ImageGalleryItem/ImageGalleryItem';
 import Loader from 'components/Loader/Loader';
 import PropTypes from 'prop-types';
 import s from '../styles.module.css';
-import { fetchApiImages } from '../services/images-api.services';
+import { fetchApiImages } from '../../services/images-api.services';
 import { Button } from 'components/Button/Button';
 
 export class ImageGallery extends Component {
@@ -26,11 +26,12 @@ export class ImageGallery extends Component {
     const nextPage = this.state.page;
 
     if (prevSearch !== nextSearch) {
-      this.setState({ searchQuery: nextSearch, images: [] });
+      this.setState({ searchQuery: nextSearch, images: [], page: 1 });
     }
 
     if (prevSearch !== nextSearch || prevPage !== nextPage) {
       this.setState({ loading: true });
+
       fetchApiImages(nextSearch, nextPage).then(({ hits, totalHits }) => {
         if (hits.length === 0) {
           Notiflix.Notify.failure(
@@ -48,6 +49,12 @@ export class ImageGallery extends Component {
           return;
         }
 
+        const [data] = hits;
+
+        const { id, webformatURL, largeImageURL } = data;
+
+        console.log(id, webformatURL, largeImageURL);
+
         this.setState(({ images }) => ({
           images: [...images, ...hits],
           loading: false,
@@ -61,28 +68,28 @@ export class ImageGallery extends Component {
   };
 
   render() {
-    const { images, loading } = this.state;
+    const { images, loading, searchQuery } = this.state;
 
     return (
       <Fragment>
-        {loading && Loader}
+        {searchQuery && (
+          <ul className={s.gallery}>
+            {images.map(({ id, webformatURL, tags }) => (
+              <ImageGalleryItem
+                onClick={this.props.onImageClick}
+                key={id}
+                id={id}
+                src={webformatURL}
+                alt={tags}
+              />
+            ))}
+          </ul>
+        )}
 
-        <ul className={s.gallery}>
-          {images.map(({ id, webformatURL, tags }) => (
-            <ImageGalleryItem
-              onClick={this.props.onImageClick}
-              key={id}
-              id={id}
-              src={webformatURL}
-              alt={tags}
-            />
-          ))}
-        </ul>
+        {loading && Loader}
 
         {images.length > 0 && <Button onClick={this.loadMore}></Button>}
       </Fragment>
     );
   }
 }
-
-
