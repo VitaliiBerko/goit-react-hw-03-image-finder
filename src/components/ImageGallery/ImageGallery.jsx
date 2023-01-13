@@ -92,9 +92,8 @@ export class ImageGallery extends Component {
           </ul>
         )}
 
-        {loading && Loader}
-
-        {images.length > 0 && <Button onClick={this.loadMore}></Button>}
+        {(loading && Loader) ||
+          (images.length > 0  &&  <Button onClick={this.loadMore}></Button>)}
       </Fragment>
     );
   }
